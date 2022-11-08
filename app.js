@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/auth");
 
 // Handle cors error
-// app.use(cors({origin: true}));
+app.use(cors({ origin: true }));
 
 app.get("/", (req, res, next) => {
   return res.json("Hi there!");
