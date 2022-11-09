@@ -9,6 +9,7 @@
 3. `npm install` to install necessary packages
 
 4. In the root directory create a `.env` file and give it the following value
+
    DB_STRING = (MongoDB connection string)
 
 5. In `/config` folder create a file named `serviceAccountKey.json`
