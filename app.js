@@ -4,7 +4,10 @@ const app = express();
 require("dotenv/config");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const userRoute = require("./routes/auth");
+const userRoutes = require("./routes/authRoutes");
+const artistRoutes = require("./routes/artistRoutes");
+const songRoutes = require("./routes/songRoutes");
+const albumRoutes = require("./routes/albumRoutes");
 
 // Handle cors error
 app.use(cors({ origin: true }));
@@ -14,7 +17,16 @@ app.get("/", (req, res, next) => {
 });
 
 // User authentication route
-app.use("/api/users", userRoute);
+app.use("/api/users", userRoutes);
+
+// Artist Routes
+app.use("/api/artist", artistRoutes);
+
+// Album Routes
+app.use("/api/album", albumRoutes);
+
+// Song Routes
+app.use("/api/song", songRoutes);
 
 // DB connection
 mongoose.connect(process.env.DB_STRING, {
