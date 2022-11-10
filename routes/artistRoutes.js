@@ -1,7 +1,16 @@
-const router = require('express').Router()
+const router = require("express").Router();
+const Artist = require("../models/artistModel");
+const artistController = require("../controllers/artistController");
 
-router.get('/', async (req, res) => {
-  return res.json("getting all artist")
-})
+router
+  .route("/")
+  .get(artistController.getAllArtists)
+  .post(artistController.createArtist);
 
-module.exports = router
+router
+  .route("/:id")
+  .get(artistController.getArtist)
+  .patch(artistController.updateArtist)
+  .delete(artistController.deleteArtist);
+
+module.exports = router;

@@ -1,18 +1,19 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const artistSchema = new mongoose.Schema({
-  name: {
-    type: String, 
-    required: true
+const artistSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    imageURL: {
+      type: String,
+      required: true,
+    },
   },
-  imageURL: {
-    type: String,
-    required: true
-  },
+  { timestamps: true }
+);
 
-},
-{timestamp: true})
+const Artist = mongoose.model("artist", artistSchema);
 
-const Artist = mongoose.model('artist', artistSchema)
-
-module.exports = Artist
+module.exports = Artist;
