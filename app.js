@@ -11,6 +11,7 @@ const albumRoutes = require("./routes/albumRoutes");
 
 // Handle cors error
 app.use(cors({ origin: true }));
+app.use(express.json());
 
 app.get("/", (req, res, next) => {
   return res.json("Hi there!");
