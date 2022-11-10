@@ -20,13 +20,13 @@ app.get("/", (req, res, next) => {
 app.use("/api/users", userRoutes);
 
 // Artist Routes
-app.use("/api/artist", artistRoutes);
+app.use("/api/artists", artistRoutes);
 
 // Album Routes
-app.use("/api/album", albumRoutes);
+app.use("/api/albums", albumRoutes);
 
 // Song Routes
-app.use("/api/song", songRoutes);
+app.use("/api/songs", songRoutes);
 
 // DB connection
 mongoose.connect(process.env.DB_STRING, {

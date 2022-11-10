@@ -1,7 +1,7 @@
-const router = require('express').router()
+const router = require("express").Router();
 
-router.get('/', async (req, res) => {
-  return res.json("getting all songs")
-})
+router.get("/", async (req, res) => {
+  return res.json("getting all songs");
+});
 
-module.exports = router
+module.exports = router;
