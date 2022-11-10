@@ -1,7 +1,6 @@
 const router = require("express").Router();
+const songController = require("../controllers/songController");
 
-router.get("/", async (req, res) => {
-  return res.json("getting all songs");
-});
+router.get("/", songController.getAllSongs);
 
 module.exports = router;

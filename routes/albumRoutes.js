@@ -1,7 +1,6 @@
 const router = require("express").Router();
+const albumController = require("../controllers/albumController");
 
-router.get("/", async (req, res) => {
-  return res.json("getting all albums");
-});
+router.get("/", albumController.getAllAlbums);
 
 module.exports = router;
