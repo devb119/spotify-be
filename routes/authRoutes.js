@@ -47,7 +47,7 @@ const createNewUser = async (decodeValue, req, res) => {
 
   try {
     const savedUser = await User.create(newUser);
-    res.status(200).json({ user: savedUser });
+    res.status(200).json({ success: true, data: savedUser });
   } catch (error) {
     res.status(501).send({ success: false, message: error });
   }
@@ -57,8 +57,8 @@ const updateUser = async (decodeValue, req, res) => {
   const filter = { userId: decodeValue.user_id };
 
   const option = {
-    upsert: true,
     new: true,
+    runValidators: true,
   };
   try {
     const result = await User.findOneAndUpdate(
@@ -68,7 +68,11 @@ const updateUser = async (decodeValue, req, res) => {
       },
       option
     );
-    res.status(200).json({ user: result });
+    result
+      ? res.status(200).json({ data: result })
+      : res
+          .status(400)
+          .json({ success: false, message: "Data not found with that ID" });
   } catch (error) {
     return res.status(501).json({ success: false, message: error });
   }
