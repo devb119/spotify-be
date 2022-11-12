@@ -26,9 +26,7 @@ exports.getArtist = async (req, res, next) => {
   if (artist) {
     return res.status(200).json({ success: true, data: artist });
   } else {
-    return res
-      .status(400)
-      .json({ success: false, message: "Artist not found" });
+    return res.status(400).json({ success: false, message: "Data not found" });
   }
 };
 
