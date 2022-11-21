@@ -24,7 +24,7 @@ exports.createAlbum = async (req, res, next) => {
 exports.getAlbum = async (req, res, next) => {
   const album = await Album.findById(req.params.id);
   if (album) {
-    return res.status(200).json({ success: true, album });
+    return res.status(200).json({ success: true, data: album });
   } else {
     return res.status(400).json({ success: false, message: "Data not found" });
   }
