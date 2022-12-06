@@ -18,7 +18,8 @@ const songSchema = new mongoose.Schema(
       type: String,
     },
     artist: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
+      ref: "artist",
       required: true,
     },
     language: {
@@ -30,8 +31,16 @@ const songSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+songSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "artist",
+    select: "name id",
+  });
+  next();
+});
 
 const Song = mongoose.model("song", songSchema);
 
