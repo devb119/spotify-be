@@ -6,6 +6,10 @@ router
   .get(songController.getAllSongs)
   .post(songController.createSong);
 
+router.get("/search", songController.searchSong);
+
+router.get("/categories", songController.getCategories);
+
 router
   .route("/:id")
   .get(songController.getSong)

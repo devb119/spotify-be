@@ -9,6 +9,32 @@ exports.getAllSongs = async (req, res, next) => {
   }
 };
 
+exports.searchSong = async (req, res, next) => {
+  let songs;
+  try {
+    if (req.query.name) {
+      songs = await Song.find({
+        name: { $regex: req.query.name, $options: "i" },
+      });
+    }
+    if (req.query.category) {
+      songs = await Song.find({ category: req.query.category });
+    }
+    res.status(200).json({ success: true, data: songs });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error });
+  }
+};
+
+exports.getCategories = async (req, res, next) => {
+  try {
+    const songs = await Song.distinct("category");
+    res.status(200).json({ success: true, data: songs });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error });
+  }
+};
+
 exports.createSong = async (req, res, next) => {
   try {
     const newSong = await Song.create({
