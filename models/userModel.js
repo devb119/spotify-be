@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    likedSongs: [{ type: mongoose.Schema.ObjectId, ref: "song" }],
   },
   {
     timestamps: true,

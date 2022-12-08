@@ -1,5 +1,6 @@
 const express = require("express");
 const admin = require("../config/firebase.config");
+const auth = require("../controllers/authController");
 const User = require("../models/userModel");
 
 const router = express.Router();
@@ -43,6 +44,7 @@ const createNewUser = async (decodeValue, req, res) => {
     emailVerified: decodeValue.email_verified,
     role: "member",
     authTime: decodeValue.auth_time,
+    likedSongs: [],
   };
 
   try {
@@ -65,6 +67,7 @@ const updateUser = async (decodeValue, req, res) => {
       filter,
       {
         authTime: decodeValue.auth_time,
+        ...req.body,
       },
       option
     );
@@ -78,13 +81,26 @@ const updateUser = async (decodeValue, req, res) => {
   }
 };
 
-router.get("/", async (req, res) => {
-  const result = await User.find().sort({ createdAt: 1 });
-  if (result) {
-    res.status(200).json({ success: true, data: result });
-  } else {
-    res.status(500).json({ success: false, message: "No data found" });
-  }
+async function updateMe(req, res, next) {
+  const user = await User.findOneAndUpdate(
+    { userId: req.user.userId },
+    req.body,
+    { new: true, runValidators: true }
+  );
+  user
+    ? res.status(200).json({ data: user })
+    : res
+        .status(400)
+        .json({ success: false, message: "Data not found with that ID" });
+}
+
+router.route("/updateMe").patch(auth.protect, updateMe);
+
+router.get("/likedSongs", auth.protect, async function (req, res, next) {
+  const likedSongs = await User.findOne({ userId: req.user.userId })
+    .select("likedSongs")
+    .populate("likedSongs");
+  res.status(200).json({ success: true, data: likedSongs });
 });
 
 module.exports = router;
