@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const checkEmptyArray = require("../utils/checkEmptyArray");
 
 const songSchema = new mongoose.Schema(
   {
@@ -18,16 +19,31 @@ const songSchema = new mongoose.Schema(
       type: String,
     },
     artist: {
-      type: mongoose.Schema.ObjectId,
-      ref: "artist",
-      required: true,
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "artist",
+          required: true,
+        },
+      ],
+      validate: [checkEmptyArray, "An artist is required"],
     },
     language: {
       type: String,
       required: true,
     },
-    category: {
-      type: String,
+    lyric: String,
+    section: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "section",
+      required: true,
+    },
+    duration: {
+      type: Number,
+      required: true,
+    },
+    countListen: {
+      type: Number,
       required: true,
     },
   },
