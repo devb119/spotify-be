@@ -10,6 +10,11 @@ const albumSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    section: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "section",
+    },
+    type: String,
   },
   {
     timestamps: true,
