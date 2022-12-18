@@ -44,7 +44,10 @@ exports.createSong = async (req, res, next) => {
       album: req.body.album,
       artist: req.body.artist,
       language: req.body.language,
-      category: req.body.category,
+      lyric: req.body.lyric,
+      section: req.body.section,
+      duration: req.body.duration,
+      countListen: req.body.countListen,
     });
     return res.status(200).json({ success: true, data: newSong });
   } catch (error) {
@@ -82,7 +85,10 @@ exports.updateSong = async (req, res, next) => {
         album: req.body.album,
         artist: req.body.artist,
         language: req.body.language,
-        category: req.body.category,
+        section: req.body.section,
+        lyric: req.body.lyric,
+        duration: req.body.duration,
+        countListen: req.body.countListen,
       },
       options
     );
