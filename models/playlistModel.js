@@ -27,6 +27,10 @@ const playlistSchema = new mongoose.Schema({
   },
 });
 
+playlistSchema.pre(/^find/, function (next) {
+  this.populate({ path: "songs creator section" });
+});
+
 const Playlist = mongoose.model("playlist", playlistSchema);
 
 module.exports = Playlist;
