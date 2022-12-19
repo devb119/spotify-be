@@ -50,10 +50,12 @@ const songSchema = new mongoose.Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
+songSchema.index({ name: 1 });
+
 songSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "artist",
-    select: "name id",
+    path: "artist section",
+    select: "name id genre",
   });
   next();
 });

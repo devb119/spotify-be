@@ -21,6 +21,11 @@ const albumSchema = new mongoose.Schema(
   }
 );
 
+albumSchema.pre(/^find/, function (next) {
+  this.populate({ path: "section" });
+  next();
+});
+
 const Album = mongoose.model("album", albumSchema);
 
 module.exports = Album;
