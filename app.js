@@ -8,6 +8,8 @@ const userRoutes = require("./routes/authRoutes");
 const artistRoutes = require("./routes/artistRoutes");
 const songRoutes = require("./routes/songRoutes");
 const albumRoutes = require("./routes/albumRoutes");
+const genreRoutes = require("./routes/genreRoutes");
+const sectionRoutes = require("./routes/sectionRoutes");
 
 // Handle cors error
 app.use(cors({ origin: true }));
@@ -28,6 +30,12 @@ app.use("/api/albums", albumRoutes);
 
 // Song Routes
 app.use("/api/songs", songRoutes);
+
+// Genre Routes
+app.use("/api/genres", genreRoutes);
+
+// Section Routes
+app.use("/api/sections", sectionRoutes);
 
 // DB connection
 mongoose.connect(process.env.DB_STRING, {

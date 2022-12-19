@@ -12,6 +12,14 @@ const sectionSchema = new mongoose.Schema({
   },
 });
 
+sectionSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "genre",
+    select: "name",
+  });
+  next();
+});
+
 const Section = mongoose.model("section", sectionSchema);
 
 module.exports = Section;
