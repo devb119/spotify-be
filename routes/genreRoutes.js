@@ -1,20 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Genre = require("../models/genreModel");
+const genreController = require("../controllers/genreController");
 
-router.post("/", async function (req, res, next) {
-  try {
-    const genre = await Genre.create({
-      name: req.body.name,
-      imageURL: req.body.imageURL,
-    });
-    res.status(200).json({
-      success: true,
-      data: genre,
-    });
-  } catch (err) {
-    res.status(500).send({ success: false, message: err });
-  }
-});
+router
+  .route("/")
+  .get(genreController.getAllGenres)
+  .post(genreController.createGenre);
 
 module.exports = router;
