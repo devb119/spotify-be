@@ -10,6 +10,7 @@ const songRoutes = require("./routes/songRoutes");
 const albumRoutes = require("./routes/albumRoutes");
 const genreRoutes = require("./routes/genreRoutes");
 const sectionRoutes = require("./routes/sectionRoutes");
+const playlistRoutes = require("./routes/playlistRoutes");
 
 // Handle cors error
 app.use(cors({ origin: true }));
@@ -27,6 +28,9 @@ app.use("/api/artists", artistRoutes);
 
 // Album Routes
 app.use("/api/albums", albumRoutes);
+
+// playlist Routes
+app.use("/api/playlists", playlistRoutes);
 
 // Song Routes
 app.use("/api/songs", songRoutes);
