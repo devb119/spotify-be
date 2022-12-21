@@ -1,28 +1,21 @@
 const Song = require("../models/songModel");
 
 exports.getAllSongs = async (req, res, next) => {
-  const songs = await Song.find().sort({ createdAt: -1 });
+  const queryObj = { ...req.query };
+  const excludedFields = ["page", "sort", "limit", "fields"];
+  excludedFields.forEach((el) => delete queryObj[el]);
+
+  const query = Song.find({
+    ...queryObj,
+    name: { $regex: queryObj.name, $options: "i" },
+  });
+
+  const songs = await query;
+
   if (songs) {
     return res.status(200).json({ success: true, data: songs });
   } else {
     return res.status(400).json({ success: false, message: "Data not found" });
-  }
-};
-
-exports.searchSong = async (req, res, next) => {
-  let songs;
-  try {
-    if (req.query.name) {
-      songs = await Song.find({
-        name: { $regex: req.query.name, $options: "i" },
-      });
-    }
-    if (req.query.category) {
-      songs = await Song.find({ category: req.query.category });
-    }
-    res.status(200).json({ success: true, data: songs });
-  } catch (error) {
-    return res.status(500).send({ success: false, message: error });
   }
 };
 

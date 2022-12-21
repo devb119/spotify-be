@@ -1,7 +1,7 @@
 const express = require("express");
-const app = express();
 // Backend code require dotenv to read environment variable
 require("dotenv/config");
+const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/authRoutes");
