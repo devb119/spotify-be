@@ -4,10 +4,12 @@ exports.getAllSongs = async (req, res, next) => {
   const queryObj = { ...req.query };
   const excludedFields = ["page", "sort", "limit", "fields"];
   excludedFields.forEach((el) => delete queryObj[el]);
+  if (queryObj.name) {
+    queryObj.name = { $regex: queryObj.name, $options: "i" };
+  }
 
   const query = Song.find({
     ...queryObj,
-    name: { $regex: queryObj.name, $options: "i" },
   });
 
   const songs = await query;
