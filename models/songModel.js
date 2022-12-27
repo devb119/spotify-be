@@ -55,7 +55,7 @@ songSchema.index({ name: 1 });
 songSchema.pre(/^find/, function (next) {
   this.populate({
     path: "artist section",
-    select: "name id genre",
+    select: "name id genre imageURL",
   });
   next();
 });
