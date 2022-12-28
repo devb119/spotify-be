@@ -6,7 +6,7 @@ router
   .get(songController.getAllSongs)
   .post(songController.createSong);
 
-router.get("/categories", songController.getCategories);
+router.get("/section", songController.getSongsWithSection);
 
 router
   .route("/:id")

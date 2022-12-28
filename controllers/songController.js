@@ -8,9 +8,7 @@ exports.getAllSongs = async (req, res, next) => {
     queryObj.name = { $regex: queryObj.name, $options: "i" };
   }
 
-  const query = Song.find({
-    ...queryObj,
-  });
+  const query = Song.find(queryObj);
 
   const songs = await query;
 
@@ -21,13 +19,20 @@ exports.getAllSongs = async (req, res, next) => {
   }
 };
 
-exports.getCategories = async (req, res, next) => {
-  try {
-    const songs = await Song.distinct("category");
-    res.status(200).json({ success: true, data: songs });
-  } catch (error) {
-    return res.status(500).send({ success: false, message: error });
-  }
+exports.getSongsWithSection = async function (req, res, next) {
+  const result = await Song.aggregate([
+    {
+      $group: {
+        _id: "$section",
+        count: { $sum: 1 },
+        songs: { $push: "$$ROOT" },
+      },
+    },
+    // {
+    //   $lookup: {},
+    // },
+  ]);
+  res.status(200).json({ success: true, data: result });
 };
 
 exports.createSong = async (req, res, next) => {
