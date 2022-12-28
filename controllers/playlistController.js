@@ -30,3 +30,23 @@ exports.createPlaylist = async function (req, res) {
     return res.status(500).send({ success: false, message: error });
   }
 };
+
+exports.getAllMyPlaylists = async function (req, res, next) {
+  const myPlaylists = await Playlist.find({ creator: req.user._id }).select(
+    "-songs -creator"
+  );
+  res.status(200).json({ success: true, data: myPlaylists });
+};
+
+exports.createMyPlaylist = async function (req, res, next) {
+  const newPlaylist = await Playlist.create({
+    name: req.body.name,
+    songs: req.body.songs,
+    creator: req.user._id,
+    description: req.body.description,
+    imageURL: req.body.imageURL,
+  });
+  if (newPlaylist) {
+    res.status(200).json({ success: true, data: newPlaylist });
+  }
+};

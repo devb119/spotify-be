@@ -7,6 +7,12 @@ router
   .get(playlistController.getAllPlaylists)
   .post(playlistController.createPlaylist);
 
-router.route("/me").get(authController.protect);
+// From this point => protected
+router.use(authController.protect);
+
+router
+  .route("/me")
+  .get(playlistController.getAllMyPlaylists)
+  .post(playlistController.createMyPlaylist);
 
 module.exports = router;
