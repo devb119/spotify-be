@@ -1,3 +1,4 @@
+const Section = require("../models/sectionModel");
 const Song = require("../models/songModel");
 
 exports.getAllSongs = async (req, res, next) => {
@@ -25,14 +26,26 @@ exports.getSongsWithSection = async function (req, res, next) {
       $group: {
         _id: "$section",
         count: { $sum: 1 },
-        songs: { $push: "$$ROOT" },
+        songs: {
+          $push: "$$ROOT",
+          // {
+          //   name: "$name",
+          //   artist: "$artist",
+          //   songURL: "$songURL",
+          //   imageURL: "$imageURL",
+          //   section: "$section.name",
+          // },
+        },
       },
     },
-    // {
-    //   $lookup: {},
-    // },
   ]);
-  res.status(200).json({ success: true, data: result });
+  const resultPromises = result.map(async (el) => {
+    const section = await Section.findById(el._id).select("-_id -genre -__v");
+    return { ...el, section };
+  });
+  const populatedResult = await Promise.all(resultPromises);
+
+  res.status(200).json({ success: true, data: populatedResult });
 };
 
 exports.createSong = async (req, res, next) => {
