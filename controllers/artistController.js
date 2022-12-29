@@ -1,4 +1,6 @@
 const Artist = require("../models/artistModel");
+const Song = require("../models/songModel");
+const Album = require("../models/albumModel");
 
 exports.getAllArtists = async (req, res, next) => {
   const artists = await Artist.find().sort({ createdAt: -1 });
@@ -22,11 +24,26 @@ exports.createArtist = async (req, res, next) => {
 };
 
 exports.getArtist = async (req, res, next) => {
-  const artist = await Artist.findById(req.params.id);
-  if (artist) {
-    return res.status(200).json({ success: true, data: artist });
-  } else {
-    return res.status(400).json({ success: false, message: "Data not found" });
+  try {
+    const artist = await Artist.findById(req.params.id)
+      .select("-updatedAt -createdAt -__v")
+      .lean();
+    artist.popularTracks = await Song.find({ artist: artist._id })
+      .select("-lyric -artist -updatedAt -sectionName")
+      .sort({
+        countListen: -1,
+      })
+      .limit(10);
+    artist.popularAlbums = await Album.find({ artist: artist._id }).limit(5);
+    if (artist) {
+      return res.status(200).json({ success: true, data: artist });
+    } else {
+      return res
+        .status(400)
+        .json({ success: false, message: "Data not found" });
+    }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error });
   }
 };
 
