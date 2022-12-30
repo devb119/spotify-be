@@ -38,15 +38,74 @@ exports.getAllMyPlaylists = async function (req, res, next) {
   res.status(200).json({ success: true, data: myPlaylists });
 };
 
+exports.getMyPlaylist = async function (req, res) {
+  try {
+    const playlist = await Playlist.findById(req.params.id);
+    if (playlist) {
+      res.status(200).json({ success: true, data: playlist });
+    } else {
+      res.status(400).json({ success: false, message: "No data found" });
+    }
+  } catch (error) {
+    res.status(500).send({ success: false, message: error });
+  }
+};
+
 exports.createMyPlaylist = async function (req, res, next) {
-  const newPlaylist = await Playlist.create({
-    name: req.body.name,
-    songs: req.body.songs,
-    creator: req.user._id,
-    description: req.body.description,
-    imageURL: req.body.imageURL,
-  });
-  if (newPlaylist) {
-    res.status(200).json({ success: true, data: newPlaylist });
+  try {
+    const newPlaylist = await Playlist.create({
+      name: req.body.name,
+      songs: req.body.songs ? req.body.songs : [],
+      creator: req.user._id,
+      description: req.body.description,
+      imageURL: req.body.imageURL,
+    });
+    if (newPlaylist) {
+      res.status(200).json({ success: true, data: newPlaylist });
+    }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error });
+  }
+};
+
+exports.addSongToPlaylist = async function (req, res, next) {
+  try {
+    const options = {
+      new: true,
+      runValidators: true,
+    };
+    const playlist = await Playlist.findByIdAndUpdate(
+      req.params.playlist,
+      {
+        $push: { songs: req.params.song },
+      },
+      options
+    );
+    if (playlist) {
+      res.status(200).json({ success: true, data: playlist });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error });
+  }
+};
+
+exports.deleteSongFromPlaylist = async function (req, res, next) {
+  try {
+    const options = {
+      new: true,
+      runValidators: true,
+    };
+    const playlist = await Playlist.findByIdAndUpdate(
+      req.params.playlist,
+      {
+        $pull: { songs: req.params.song },
+      },
+      options
+    );
+    if (playlist) {
+      res.status(200).json({ success: true, data: playlist });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error });
   }
 };

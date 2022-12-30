@@ -11,8 +11,15 @@ router
 router.use(authController.protect);
 
 router
+  .route("/:playlist/:song")
+  .post(playlistController.addSongToPlaylist)
+  .delete(playlistController.deleteSongFromPlaylist);
+
+router
   .route("/me")
   .get(playlistController.getAllMyPlaylists)
   .post(playlistController.createMyPlaylist);
+
+router.route("/me/:id").get(playlistController.getMyPlaylist);
 
 module.exports = router;
