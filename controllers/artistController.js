@@ -29,7 +29,7 @@ exports.getArtist = async (req, res, next) => {
       .select("-updatedAt -createdAt -__v")
       .lean();
     artist.popularTracks = await Song.find({ artist: artist._id })
-      .select("-lyric -artist -updatedAt -sectionName")
+      .select("-lyric -updatedAt -sectionName")
       .sort({
         countListen: -1,
       })
