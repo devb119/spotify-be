@@ -20,7 +20,7 @@ exports.getAllSongs = async (req, res, next) => {
   }
 };
 
-exports.getSongsWithSection = async function (req, res, next) {
+exports.getSongsWithSections = async function (req, res, next) {
   const result = await Song.aggregate([
     {
       $group: {
@@ -46,6 +46,19 @@ exports.getSongsWithSection = async function (req, res, next) {
   const populatedResult = await Promise.all(resultPromises);
 
   res.status(200).json({ success: true, data: populatedResult });
+};
+
+exports.getSongsBySection = async function (req, res) {
+  try {
+    const songs = await Song.find({ section: req.params.id });
+    if (songs) {
+      return res.status(200).json({ success: true, data: songs });
+    } else {
+      return res.status(400).json({ success: false, message: "No data found" });
+    }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error });
+  }
 };
 
 exports.createSong = async (req, res, next) => {
