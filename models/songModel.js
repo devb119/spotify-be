@@ -16,7 +16,8 @@ const songSchema = new mongoose.Schema(
       required: true,
     },
     album: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "album",
     },
     artist: {
       type: [
@@ -54,7 +55,7 @@ songSchema.index({ name: 1 });
 
 songSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "artist section",
+    path: "artist section album",
     select: "name id genre imageURL",
   });
   next();

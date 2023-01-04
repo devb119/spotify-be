@@ -98,7 +98,7 @@ router.route("/updateMe").patch(auth.protect, updateMe);
 
 router.get("/likedSongs", auth.protect, async function (req, res, next) {
   const likedSongs = await User.findOne({ userId: req.user.userId })
-    .select("likedSongs")
+    .select("likedSongs -_id")
     .populate("likedSongs");
   res.status(200).json({ success: true, data: likedSongs });
 });
