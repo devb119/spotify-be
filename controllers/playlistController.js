@@ -40,7 +40,10 @@ exports.getAllMyPlaylists = async function (req, res, next) {
 
 exports.getMyPlaylist = async function (req, res) {
   try {
-    const playlist = await Playlist.findById(req.params.id);
+    const playlist = await Playlist.findOne({
+      _id: req.params.id,
+      creator: req.user._id,
+    });
     if (playlist) {
       res.status(200).json({ success: true, data: playlist });
     } else {
@@ -104,6 +107,24 @@ exports.deleteSongFromPlaylist = async function (req, res, next) {
     );
     if (playlist) {
       res.status(200).json({ success: true, data: playlist });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error });
+  }
+};
+
+exports.deleteMyPlaylist = async function (req, res) {
+  try {
+    const playlist = await Playlist.findOneAndDelete({
+      creator: req.user._id,
+      _id: req.params.id,
+    });
+    if (playlist) {
+      res.status(204).json({ success: true, data: playlist });
+    } else {
+      res
+        .status(404)
+        .json({ success: false, message: "No document found with that ID" });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: error });
