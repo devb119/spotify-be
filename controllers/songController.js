@@ -1,5 +1,6 @@
 const Section = require("../models/sectionModel");
 const Song = require("../models/songModel");
+const Artist = require("../models/artistModel");
 
 exports.getAllSongs = async (req, res, next) => {
   const queryObj = { ...req.query };
@@ -27,21 +28,38 @@ exports.getSongsWithSections = async function (req, res, next) {
         _id: "$section",
         count: { $sum: 1 },
         songs: {
-          $push: "$$ROOT",
-          // {
-          //   name: "$name",
-          //   artist: "$artist",
-          //   songURL: "$songURL",
-          //   imageURL: "$imageURL",
-          //   section: "$section.name",
-          // },
+          $push: {
+            _id: "$_id",
+            name: "$name",
+            imageURL: "$imageURL",
+            artist: "$artist",
+          },
         },
       },
     },
+    { $project: { _id: 0 } },
   ]);
   const resultPromises = result.map(async (el) => {
     const section = await Section.findById(el._id).select("-_id -genre -__v");
-    return { ...el, section };
+    const newSongs = el.songs.map(async (song) => {
+      let artist;
+      if (Array.isArray(song.artist)) {
+        const artistPromises = song.artist.map(
+          async (id) =>
+            await Artist.findById(id).select("-createdAt -__v -updatedAt")
+        );
+        artist = await Promise.all(artistPromises);
+      } else {
+        artist = [
+          await Artist.findById(song.artist).select(
+            "-createdAt -__v -updatedAt"
+          ),
+        ];
+      }
+      return { ...song, artist };
+    });
+    const songsResult = await Promise.all(newSongs);
+    return { ...el, section, songs: songsResult };
   });
   const populatedResult = await Promise.all(resultPromises);
 
