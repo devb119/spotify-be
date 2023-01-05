@@ -71,6 +71,31 @@ exports.createMyPlaylist = async function (req, res, next) {
   }
 };
 
+exports.updateMyPlaylist = async function (req, res) {
+  const options = {
+    new: true,
+    runValidators: true,
+  };
+  try {
+    const result = await Playlist.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        imageURL: req.body.imageURL,
+        description: req.body.description,
+      },
+      options
+    );
+    return result
+      ? res.status(200).json({ data: result })
+      : res
+          .status(400)
+          .json({ success: false, message: "Data not found with that ID" });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error });
+  }
+};
+
 exports.addSongToPlaylist = async function (req, res, next) {
   try {
     const options = {

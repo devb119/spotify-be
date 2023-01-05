@@ -18,6 +18,7 @@ router
 router
   .route("/me/:id")
   .get(playlistController.getMyPlaylist)
+  .patch(playlistController.updateMyPlaylist)
   .delete(playlistController.deleteMyPlaylist);
 
 router
