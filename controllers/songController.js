@@ -37,7 +37,6 @@ exports.getSongsWithSections = async function (req, res, next) {
         },
       },
     },
-    { $project: { _id: 0 } },
   ]);
   const resultPromises = result.map(async (el) => {
     const section = await Section.findById(el._id).select("-_id -genre -__v");
