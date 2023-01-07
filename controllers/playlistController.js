@@ -33,7 +33,7 @@ exports.createPlaylist = async function (req, res) {
 
 exports.getAllMyPlaylists = async function (req, res, next) {
   const myPlaylists = await Playlist.find({ creator: req.user._id }).select(
-    "-songs -creator"
+    "-songs"
   );
   res.status(200).json({ success: true, data: myPlaylists });
 };
