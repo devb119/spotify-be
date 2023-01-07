@@ -5,10 +5,14 @@ const router = express.Router();
 
 router.get("/login", authController.login);
 
-router
-  .route("/updateMe")
-  .patch(authController.protect, authController.updateMe);
+router.use(authController.protect);
+router.route("/updateMe").patch(authController.updateMe);
 
-router.get("/likedSongs", authController.protect, authController.getLikedSongs);
+router.get("/likedSongs", authController.getLikedSongs);
+
+router
+  .route("/likedSongs/:id")
+  .post(authController.addLikedSongs)
+  .delete(authController.deleteLikedSongs);
 
 module.exports = router;

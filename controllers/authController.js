@@ -125,3 +125,45 @@ exports.getLikedSongs = async function (req, res, next) {
     .populate("likedSongs");
   res.status(200).json({ success: true, data: likedSongs });
 };
+
+exports.addLikedSongs = async function (req, res) {
+  try {
+    const options = {
+      new: true,
+      runValidators: true,
+    };
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $push: { likedSongs: req.params.id },
+      },
+      options
+    );
+    if (user) {
+      res.status(201).json({ success: true, data: user.likedSongs });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error });
+  }
+};
+
+exports.deleteLikedSongs = async function (req, res) {
+  try {
+    const options = {
+      new: true,
+      runValidators: true,
+    };
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { likedSongs: req.params.id },
+      },
+      options
+    );
+    if (user) {
+      res.status(201).json({ success: true, data: user.likedSongs });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error });
+  }
+};
