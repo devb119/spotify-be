@@ -138,7 +138,7 @@ exports.addLikedSongs = async function (req, res) {
         $push: { likedSongs: req.params.id },
       },
       options
-    );
+    ).populate("likedSongs", "-lyric -__v -createdAt -updatedAt");
     if (user) {
       res.status(201).json({ success: true, data: user.likedSongs });
     }
@@ -159,7 +159,7 @@ exports.deleteLikedSongs = async function (req, res) {
         $pull: { likedSongs: req.params.id },
       },
       options
-    );
+    ).populate("likedSongs", "-lyric -__v -createdAt -updatedAt");
     if (user) {
       res.status(201).json({ success: true, data: user.likedSongs });
     }
