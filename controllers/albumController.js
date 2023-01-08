@@ -1,7 +1,13 @@
 const Album = require("../models/albumModel");
 
 exports.getAllAlbums = async (req, res, next) => {
-  const albums = await Album.find().sort({ createdAt: -1 });
+  const queryObj = { ...req.query };
+  const excludedFields = ["page", "sort", "limit", "fields"];
+  excludedFields.forEach((el) => delete queryObj[el]);
+  if (queryObj.name) {
+    queryObj.name = { $regex: queryObj.name, $options: "i" };
+  }
+  const albums = await Album.find(queryObj);
   if (albums) {
     return res.status(200).json({ success: true, data: albums });
   } else {

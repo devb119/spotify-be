@@ -21,6 +21,8 @@ const albumSchema = new mongoose.Schema(
   }
 );
 
+albumSchema.index({ name: 1 });
+
 albumSchema.pre(/^find/, function (next) {
   this.populate({ path: "section" });
   next();

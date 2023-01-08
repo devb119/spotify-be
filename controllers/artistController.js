@@ -3,7 +3,14 @@ const Song = require("../models/songModel");
 const Album = require("../models/albumModel");
 
 exports.getAllArtists = async (req, res, next) => {
-  const artists = await Artist.find().sort({ createdAt: -1 });
+  const queryObj = { ...req.query };
+  const excludedFields = ["page", "sort", "limit", "fields"];
+  excludedFields.forEach((el) => delete queryObj[el]);
+  if (queryObj.name) {
+    queryObj.name = { $regex: queryObj.name, $options: "i" };
+  }
+
+  const artists = await Artist.find(queryObj);
   if (artists) {
     return res.status(200).json({ success: true, data: artists });
   } else {
