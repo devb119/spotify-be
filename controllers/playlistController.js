@@ -119,6 +119,8 @@ exports.addSongToPlaylist = async function (req, res, next) {
     );
     if (playlist) {
       res.status(200).json({ success: true, data: playlist });
+    } else {
+      res.status(401).json({ success: false, message: "Data not found" });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: error });
@@ -140,6 +142,8 @@ exports.deleteSongFromPlaylist = async function (req, res, next) {
     );
     if (playlist) {
       res.status(200).json({ success: true, data: playlist });
+    } else {
+      res.status(401).json({ success: false, message: "Data not found" });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: error });
