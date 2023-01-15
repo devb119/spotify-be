@@ -33,6 +33,7 @@ exports.getSongsWithSections = async function (req, res, next) {
             name: "$name",
             imageURL: "$imageURL",
             artist: "$artist",
+            songURL: "$songURL",
           },
         },
       },
