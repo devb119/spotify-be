@@ -1,4 +1,5 @@
 const Album = require("../models/albumModel");
+const Song = require("../models/songModel");
 
 exports.getAllAlbums = async (req, res, next) => {
   const queryObj = { ...req.query };
@@ -28,9 +29,10 @@ exports.createAlbum = async (req, res, next) => {
 };
 
 exports.getAlbum = async (req, res, next) => {
-  const album = await Album.findById(req.params.id);
+  const album = await Album.findById(req.params.id).lean();
+  const songs = await Song.find({ album: album._id }).select("-album");
   if (album) {
-    return res.status(200).json({ success: true, data: album });
+    return res.status(200).json({ success: true, data: { ...album, songs } });
   } else {
     return res.status(400).json({ success: false, message: "Data not found" });
   }
