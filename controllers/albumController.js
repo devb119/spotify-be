@@ -8,9 +8,17 @@ exports.getAllAlbums = async (req, res, next) => {
   if (queryObj.name) {
     queryObj.name = { $regex: queryObj.name, $options: "i" };
   }
-  const albums = await Album.find(queryObj);
+  const albums = await Album.find(queryObj).lean();
   if (albums) {
-    return res.status(200).json({ success: true, data: albums });
+    const albumsWithSongs = await Promise.all(
+      albums.map(async (album) => {
+        const songs = await Song.find({ album: album._id }).select(
+          "-album -lyric -section"
+        );
+        return { ...album, songs };
+      })
+    );
+    return res.status(200).json({ success: true, data: albumsWithSongs });
   } else {
     return res.status(400).json({ success: false, message: "Data not found" });
   }
@@ -30,7 +38,9 @@ exports.createAlbum = async (req, res, next) => {
 
 exports.getAlbum = async (req, res, next) => {
   const album = await Album.findById(req.params.id).lean();
-  const songs = await Song.find({ album: album._id }).select("-album");
+  const songs = await Song.find({ album: album._id }).select(
+    "-album -lyric -section"
+  );
   if (album) {
     return res.status(200).json({ success: true, data: { ...album, songs } });
   } else {
