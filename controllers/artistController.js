@@ -41,7 +41,17 @@ exports.getArtist = async (req, res, next) => {
         countListen: -1,
       })
       .limit(10);
-    artist.popularAlbums = await Album.find({ artist: artist._id }).limit(5);
+    const popularAlbums = await Album.find({ artist: artist._id })
+      .limit(5)
+      .lean();
+    artist.popularAlbums = await Promise.all(
+      popularAlbums.map(async (album) => {
+        const songs = await Song.find({ album: album._id }).select(
+          "-album -lyric -section -artist"
+        );
+        return { ...album, songs };
+      })
+    );
     if (artist) {
       return res.status(200).json({ success: true, data: artist });
     } else {
