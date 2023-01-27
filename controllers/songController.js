@@ -1,6 +1,7 @@
 const Section = require("../models/sectionModel");
 const Song = require("../models/songModel");
 const Artist = require("../models/artistModel");
+const Album = require("../models/albumModel");
 
 exports.getAllSongs = async (req, res, next) => {
   const queryObj = { ...req.query };
@@ -34,6 +35,7 @@ exports.getSongsWithSections = async function (req, res, next) {
             imageURL: "$imageURL",
             artist: "$artist",
             songURL: "$songURL",
+            album: "$album",
           },
         },
       },
@@ -56,7 +58,10 @@ exports.getSongsWithSections = async function (req, res, next) {
           ),
         ];
       }
-      return { ...song, artist };
+      const album = await Album.findById(song.album).select(
+        "-artist -section -imageURL -type -updatedAt"
+      );
+      return { ...song, artist, album };
     });
     const songsResult = await Promise.all(newSongs);
     return { ...el, section, songs: songsResult };
