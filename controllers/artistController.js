@@ -47,7 +47,7 @@ exports.getArtist = async (req, res, next) => {
     artist.popularAlbums = await Promise.all(
       popularAlbums.map(async (album) => {
         const songs = await Song.find({ album: album._id }).select(
-          "-album -lyric -section -artist"
+          "-album -lyric -section"
         );
         return { ...album, songs };
       })
