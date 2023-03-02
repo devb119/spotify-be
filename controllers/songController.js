@@ -154,7 +154,6 @@ exports.updateSong = async (req, res, next) => {
 exports.deleteSong = async (req, res, next) => {
   try {
     const result = await Song.findByIdAndDelete(req.params.id);
-    console.log(result);
     if (result) {
       return res
         .status(200)
